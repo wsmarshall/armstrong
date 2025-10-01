@@ -5,6 +5,10 @@ async fn greet(req: HttpRequest) -> impl Responder {
     format!("Hello {}!", &name)
 }
 
+async fn health_check(req: HttpRequest) -> impl Responder {
+    todo!()
+}
+
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
     HttpServer::new(|| {
