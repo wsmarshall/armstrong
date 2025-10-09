@@ -1,7 +1,7 @@
 #[tokio::test]
 async fn health_check_works() {
     // Arrange
-    spawn_app().await.expect("Failed to spawn app");
+    spawn_app();
     //brings in reqwest to perform HTTP requests against the app
     let client = reqwest::Client::new();
 
@@ -17,6 +17,7 @@ async fn health_check_works() {
     assert_eq!(Some(0), response.content_length());
 }
 
-async fn spawn_app() -> Result<(), std::io::Error> {
-    armstrong::run().await
+fn spawn_app() {
+    let server = armstrong::run().expect("Failed to bind address");
+    let _ = tokio::spawn(server);
 }
