@@ -3,13 +3,13 @@ use std::net::TcpListener;
 #[tokio::test]
 async fn health_check_works() {
     // Arrange
-    spawn_app();
+    let address = spawn_app();
     //brings in reqwest to perform HTTP requests against the app
     let client = reqwest::Client::new();
 
     //Act
     let response = client
-        .get("http://127.0.0.1:8000/health_check")
+        .get(&format!("{}/health_check", &address))
         .send()
         .await
         .expect("Failed to execute request.");
