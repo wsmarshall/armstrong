@@ -27,6 +27,10 @@ DB_PORT="${POSTGRES_PORT:=5432}"
 #check if custom host is set, otherwise default to 'localhost'
 DB_HOST="${POSTGRES_HOST:=localhost}"
 
+#skip Docker if a dockerized Postgres database is already running
+if [[ -z "${SKIP_DOCKER}"  ]]
+then
+
 #launch Postgres using Docker
 docker run \
   -e POSTGRES_USER=${DB_USER} \
