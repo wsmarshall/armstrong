@@ -2,6 +2,13 @@
 set -x
 set -eo pipefail
 
+if ! [ -x "$(command -v psql)" ]; then
+    echo >&2 "Error: psql is not installed."
+    exit 1
+fi
+
+
+
 #check if custom user has been set, otherwise default to 'postgres'
 DB_USER="${POSTGRES_USER:=postgres}"
 #check is a custom password has been set, otherwise default to 'staple'
