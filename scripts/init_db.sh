@@ -49,3 +49,7 @@ docker run \
   DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
   export DATABASE_URL
   sqlx database create
+
+  #needs parameter setting from above
+  export DATABASE_URL=postgres://postgres:password@127.0.0.1:5432/newsletter
+  sqlx migrate add create_subscriptions_table
