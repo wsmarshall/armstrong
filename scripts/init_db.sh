@@ -30,16 +30,16 @@ DB_HOST="${POSTGRES_HOST:=localhost}"
 #skip Docker if a dockerized Postgres database is already running
 if [[ -z "${SKIP_DOCKER}"  ]]
 then
-
-#launch Postgres using Docker
-docker run \
-  -e POSTGRES_USER=${DB_USER} \
-  -e POSTGRES_PASSWORD=${DB_PASSWORD} \
-  -e POSTGRES_DB=${DB_NAME} \
-  -p "${DB_PORT}":5432 \
-  -d postgres \
-  postgres -N 1000
-  # ^ Increased max number of connections for testing 
+    #launch Postgres using Docker
+    docker run \
+        -e POSTGRES_USER=${DB_USER} \
+        -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+        -e POSTGRES_DB=${DB_NAME} \
+        -p "${DB_PORT}":5432 \
+        -d postgres \
+        postgres -N 1000
+        # ^ Increased max number of connections for testing 
+fi
 
   #ping Postgres until it's up and ready to accept input/queries/commands
   export PGPASSWORD="${DB_PASSWORD}"
@@ -48,8 +48,11 @@ docker run \
     sleep 1
   done
 
-  >&2 echo "Postgres is up and running on port ${DB_PORT}!"
+  >&2 echo "Postgres is up and running on port ${DB_PORT} - running migrations now!"
 
   DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
   export DATABASE_URL
   sqlx database create
+  sqlx migrate run
+
+  >&2 echo "Postgres has been migrated, ready to go!"
