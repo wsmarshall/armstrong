@@ -1,8 +1,13 @@
+use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
 use std::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
+    //Panic! if we can't get/read configuration
+    let configuration = get_configuration().expect("Failed to get/read configuration.");
+    //NB: address now coming from our settings
+    let address = format!("127.0.0.1:{}", configuration.application_port);
+    let listener = TcpListener::bind(address)?;
     run(listener)?.await
 }
