@@ -1,3 +1,4 @@
+use armstrong::startup::run;
 use std::net::TcpListener;
 
 //spin up the app, returns its address (e.g. http://localhost:XXXX)
@@ -5,7 +6,7 @@ fn spawn_app() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     //retrieve OS assigned port
     let port = listener.local_addr().unwrap().port();
-    let server = armstrong::run(listener).expect("Failed to bind address");
+    let server = run(listener).expect("Failed to bind address");
     let _ = tokio::spawn(server);
     format!("http://127.0.0.1:{}", port)
 }
