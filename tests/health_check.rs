@@ -1,4 +1,6 @@
+use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
+use sqlx::{Connection, PgConnection};
 use std::net::TcpListener;
 
 //spin up the app, returns its address (e.g. http://localhost:XXXX)
@@ -31,9 +33,16 @@ async fn health_check_works() {
 }
 
 #[tokio::test]
-async fn subscribe_return_a_200_for_valid_form_data() {
+async fn subscribe_returns_a_200_for_valid_form_data() {
     //Arrange
     let app_address = spawn_app();
+    let configuration = get_configuration().expect("Failed to get/read configuration");
+    let connection_string = configuration.database.connection_string();
+    //'Connection' trait MUST be in scope in order to invoke
+    //'PgConnection::connect' -- it's not an inherent method of the Settings struct(!)
+    let connection = PgConnection::connect(&connection_string)
+        .await
+        .expect("Failed to connect to Postgres");
     let client = reqwest::Client::new();
 
     //Act
