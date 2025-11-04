@@ -1,10 +1,6 @@
-extern crate db_url;
-use db_url::DATABASE_URL;
-
 use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
 use sqlx::{Connection, PgConnection};
-use std::env;
 use std::net::TcpListener;
 
 //spin up the app, returns its address (e.g. http://localhost:XXXX)
