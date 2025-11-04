@@ -1,4 +1,4 @@
-use armstrong::configuration::{DatabaseSettings, get_configuration};
+use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
 use sqlx::{Connection, PgConnection};
 use std::net::TcpListener;
