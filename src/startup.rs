@@ -1,5 +1,4 @@
-use crate::routes::health_check;
-use crate::routes::subscribe;
+use crate::routes::{health_check, subscribe};
 use actix_web::{App, HttpServer, dev::Server, web};
 use std::net::TcpListener;
 
