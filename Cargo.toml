@@ -14,8 +14,8 @@ name = "armstrong"
 config = "0.13"
 actix-web = "4"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"]}
-uuid = { version = "1", features = ["v4] }
-chrono = { version = "0.4.22, default-features = false, features = ["clock] }
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
 
 #derive (optional) needed for (De)Serialize macros
 #not included by default to avoid unnec. dependencies 
