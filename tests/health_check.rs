@@ -52,7 +52,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     let configuration = get_configuration().expect("Failed to get/read configuration");
     let connection_string = configuration.database.connection_string();
     //'PgConnection::connect' -- it's not an inherent method of the Settings struct(!)
-    let mut connection = PgConnection::connect(&connection_string)
+    let connection_pool = PgPool::connect(&connection_string)
         .await
         .expect("Failed to connect to Postgres");
     let client = reqwest::Client::new();
@@ -70,7 +70,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     assert_eq!(200, response.status().as_u16());
 
     let saved = sqlx::query!("SELECT email, name FROM subscriptions",)
-        .fetch_one(&mut connection)
+        .fetch_one(&connection_pool)
         .await
         .expect("Failed to fetch saved subscription.");
 
@@ -82,6 +82,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
 async fn subscribe_return_a_400_when_data_is_missing() {
     //Arrange
     let test_app_access = spawn_app();
+    let address = test_app_access.await.address;
     let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=le%20guin", "missing the email"),
@@ -92,10 +93,7 @@ async fn subscribe_return_a_400_when_data_is_missing() {
     for (invalid_body, error_message) in test_cases {
         //Act
         let response = client
-            .post(&format!(
-                "{}/subscriptions",
-                test_app_access.await.address.clone()
-            ))
+            .post(&format!("{}/subscriptions", address))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(invalid_body)
             .send()
