@@ -1,6 +1,7 @@
 use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
-use sqlx::{PgPool, net::TcpListener};
+use sqlx::PgPool;
+use std::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
