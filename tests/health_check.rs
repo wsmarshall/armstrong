@@ -29,13 +29,13 @@ async fn spawn_app() -> TestApp {
 #[tokio::test]
 async fn health_check_works() {
     // Arrange
-    let address = spawn_app();
+    let test_app_access = spawn_app();
     //brings in reqwest to perform HTTP requests against the app
     let client = reqwest::Client::new();
 
     //Act
     let response = client
-        .get(&format!("{}/health_check", &address))
+        .get(&format!("{}/health_check", test_app_access.await.address))
         .send()
         .await
         .expect("Failed to execute request.");
@@ -48,10 +48,9 @@ async fn health_check_works() {
 #[tokio::test]
 async fn subscribe_returns_a_200_for_valid_form_data() {
     //Arrange
-    let app_address = spawn_app();
+    let test_app_access = spawn_app();
     let configuration = get_configuration().expect("Failed to get/read configuration");
     let connection_string = configuration.database.connection_string();
-    //'Connection' trait MUST be in scope in order to invoke
     //'PgConnection::connect' -- it's not an inherent method of the Settings struct(!)
     let mut connection = PgConnection::connect(&connection_string)
         .await
@@ -61,7 +60,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     //Act
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
     let response = client
-        .post(&format!("{}/subscriptions", &app_address))
+        .post(&format!("{}/subscriptions", test_app_access.await.address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -82,7 +81,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
 #[tokio::test]
 async fn subscribe_return_a_400_when_data_is_missing() {
     //Arrange
-    let app_address = spawn_app();
+    let test_app_access = spawn_app();
     let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=le%20guin", "missing the email"),
@@ -93,7 +92,10 @@ async fn subscribe_return_a_400_when_data_is_missing() {
     for (invalid_body, error_message) in test_cases {
         //Act
         let response = client
-            .post(&format!("{}/subscriptions", &app_address))
+            .post(&format!(
+                "{}/subscriptions",
+                test_app_access.await.address.clone()
+            ))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(invalid_body)
             .send()
