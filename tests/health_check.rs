@@ -2,6 +2,7 @@ use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
 use sqlx::PgPool;
 use std::net::TcpListener;
+use uuid::Uuid;
 
 pub struct TestApp {
     pub address: String,
@@ -14,7 +15,8 @@ async fn spawn_app() -> TestApp {
     //retrieve OS assigned port
     let port = listener.local_addr().unwrap().port();
     let address = format!("http://127.0.0.1:{}", port);
-    let configuration = get_configuration().expect("Failed to read configuration.");
+    let mut configuration = get_configuration().expect("Failed to read configuration.");
+    configuration.database.database_name = Uuid::new_v4().to_string();
     let connection_pool = PgPool::connect(&configuration.database.connection_string())
         .await
         .expect("Failed to connect to Postgres.");
