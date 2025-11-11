@@ -11,6 +11,7 @@ path = "src/main.rs"
 name = "armstrong"
 
 [dependencies]
+env_logger = "0.9"
 config = "0.13"
 actix-web = "4"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"]}
