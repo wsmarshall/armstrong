@@ -127,3 +127,5 @@ async fn subscribe_return_a_400_when_data_is_missing() {
         );
     }
 }
+
+//TODO add a cleanup step for the tests: delete the logical datbases created during the test runs
