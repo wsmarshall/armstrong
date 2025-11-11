@@ -1,6 +1,8 @@
-use armstrong::configuration::get_configuration;
-use armstrong::startup::run;
-use sqlx::PgPool;
+use armstrong::{
+    configuration::{DatabaseSettings, get_configuration},
+    startup::run,
+};
+use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
 
