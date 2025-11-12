@@ -12,7 +12,6 @@ name = "armstrong"
 
 [dependencies]
 tracing = { version = "0.1", features = ["log"]}
-log = "0.4"
 env_logger = "0.9"
 config = "0.13"
 actix-web = "4"
