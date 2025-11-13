@@ -1,11 +1,29 @@
 use armstrong::configuration::get_configuration;
 use armstrong::startup::run;
-use sqlx::PgPool;
+use sqlx::postgres::PgPool;
 use std::net::TcpListener;
 use tracing::subscriber::set_global_default;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
 use tracing_log::LogTracer;
 use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt};
+
+/// Compose multiple layers into a 'tracing' subscriber
+///
+/// # Implementation Notes
+///
+/// using 'impl Subscriber' ar return type, this avoids needing to
+/// specify actual type of the returned subscriber, which ...gets messy
+/// Need to spicify the returned subscriber is Send and Sync, which
+/// makes it possible to pass it to 'init subscriber' later
+pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
+    let env_filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(env_filter));
+    let formatting_layer = BunyanFormattingLayer::new(name, std::io::stdout);
+    Registry::default()
+        .with(env_filter)
+        .with(JsonStorageLayer)
+        .with(formatting_layer)
+}
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
