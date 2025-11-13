@@ -25,6 +25,14 @@ pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Sen
         .with(formatting_layer)
 }
 
+///Register a subscriber as global default to process span data
+///
+/// NB this should only get called once
+pub fn init_subscriber(subscriber: impl Subscriber + Send + Sync) {
+    LogTracer::init().expect("Failed to set logger");
+    set_global_default(subscriber).expect("Failed to set subscriber");
+}
+
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
     //redirects all 'log' events to our subscriber
