@@ -3,6 +3,7 @@ use armstrong::{
     startup::run,
     telemetry::{get_subscriber, init_subscriber},
 };
+use once_cell::sync::Lazy;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
