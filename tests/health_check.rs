@@ -36,10 +36,14 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
 
 //spin up the app, returns its address (e.g. http://localhost:XXXX)
 async fn spawn_app() -> TestApp {
+    let subscriber = get_subscriber("test".into(), "debug".into());
+    init_subscriber(subscriber);
+
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     //retrieve OS assigned port
     let port = listener.local_addr().unwrap().port();
     let address = format!("http://127.0.0.1:{}", port);
+
     let mut configuration = get_configuration().expect("Failed to read configuration.");
     configuration.database.database_name = Uuid::new_v4().to_string();
     let connection_pool = configure_database(&configuration.database).await;
