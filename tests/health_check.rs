@@ -8,6 +8,13 @@ use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
 
+//makes sure 'tracing' stack only initialized ONCE using
+//'once_cell'
+static TRACING: Lazy<()> = Lazy::new(|| {
+    let subscriber = get_subscriber("test".into(), "debug".into());
+    init_subscriber(subscriber);
+});
+
 pub struct TestApp {
     pub address: String,
     pub db_pool: PgPool,
