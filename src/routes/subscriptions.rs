@@ -10,6 +10,16 @@ pub struct FormData {
     name: String,
 }
 
+#[tracing::instrument(
+    name = "Adding new subscriber",
+    skip(form, pool),
+    fields(
+        request_id = %Uuid::new_v4(),
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
+    )
+)]
+
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     //generate a random unique identifier
     let request_id = Uuid::new_v4();
