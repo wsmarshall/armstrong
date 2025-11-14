@@ -6,7 +6,7 @@ use std::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    let subscriber = get_subscriber("armstrong".into(), "info".into());
+    let subscriber = get_subscriber("armstrong".into(), "info".into(), std::io::stdout);
     init_subscriber(subscriber);
 
     //Panic! if we can't get/read configuration
