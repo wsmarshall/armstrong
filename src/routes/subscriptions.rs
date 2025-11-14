@@ -19,7 +19,6 @@ pub struct FormData {
         subscriber_name = %form.name
     )
 )]
-
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     let query_span = tracing::info_span!("Saving new subscriber details in the database");
 
