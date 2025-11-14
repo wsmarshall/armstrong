@@ -11,6 +11,8 @@ use uuid::Uuid;
 //makes sure 'tracing' stack only initialized ONCE using
 //'once_cell'
 static TRACING: Lazy<()> = Lazy::new(|| {
+    let default_filter_level = "info".to_string();
+    let subscriber_name = "test".to_string();
     let subscriber = get_subscriber("test".into(), "debug".into());
     init_subscriber(subscriber);
 });
