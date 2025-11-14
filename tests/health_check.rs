@@ -44,8 +44,9 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
 
 //spin up the app, returns its address (e.g. http://localhost:XXXX)
 async fn spawn_app() -> TestApp {
-    let subscriber = get_subscriber("test".into(), "debug".into());
-    init_subscriber(subscriber);
+    //first time 'initialize', the code in TRACING gets executed
+    //all other invocations skip this
+    Lazy::force(&TRACING);
 
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     //retrieve OS assigned port
