@@ -1,7 +1,8 @@
 use crate::routes::{health_check, subscribe};
-use actix_web::{App, HttpServer, dev::Server, middleware::Logger, web, web::Data};
+use actix_web::{App, HttpServer, dev::Server, web, web::Data};
 use sqlx::PgPool;
 use std::net::TcpListener;
+use tracing_actix_web::TracingLogger;
 
 pub fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, std::io::Error> {
     //wrap pool using web::Data, meaning an Arc smart pointer
@@ -10,7 +11,7 @@ pub fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, std::io::Er
     let server = HttpServer::new(move || {
         App::new()
             //middlewares use the 'wrap' method on 'App'
-            .wrap(Logger::default())
+            .wrap(TracingLogger::default())
             .route("/health_check", web::get().to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
             //get a pointer copy and attach it with application state
