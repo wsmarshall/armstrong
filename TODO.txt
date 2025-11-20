@@ -1,0 +1,4 @@
+for future feature development ideas:
+
+    use webassembly to compile project for native web deployment 
+        (note diff from initial Docker containerization)
