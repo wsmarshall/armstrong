@@ -1,5 +1,5 @@
-# Using Rust stable release as base image
-FROM rust:1.72.0
+# Using latest Rust stable release as base image
+FROM rust:1.91.1
 
 #switch working directory to 'app' (i.e. 'cd app')
 #'app' directry will be created by Docker dne
