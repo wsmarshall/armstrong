@@ -8,6 +8,8 @@ WORKDIR /app
 RUN apt update && apt install lld clang -y
 #Copy all files from working environment to Docker image
 COPY . .
+#access offline sqlx data
+ENV SQLX_OFFLINE true
 #build the binary
 #use release profile for SPEEEEEED
 RUN cargo build --release
