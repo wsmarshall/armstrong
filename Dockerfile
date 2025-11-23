@@ -13,5 +13,7 @@ ENV SQLX_OFFLINE=true
 #build the binary
 #use release profile for SPEEEEEED
 RUN cargo build --release
+#set environment for proper configuration file
+ENV APP_ENVIRONMENT production
 #launch binary when 'docker run' is executed
 ENTRYPOINT ["./target/release/armstrong"]
