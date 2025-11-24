@@ -1,14 +1,14 @@
-#Build stage
+#stage 1: compute recipe file
 # Using latest Rust stable release as base image and
 # Luca palmieri's cargo-chef as build stager for diff efficiency (caching)
 FROM lukemathwalker/cargo-chef:latest-rust-1.91.1 as chef
-
 #switch working directory to 'app' (i.e. 'cd app')
 #'app' directry will be created by Docker dne
 WORKDIR /app
 #Install required system dependencies for our linking configuration
 RUN apt update && apt install lld clang -y
 
+#stage 2: cache dependencies and build binary
 FROM chef as planner
 #Copy all files from working environment to Docker image
 COPY . .
@@ -29,7 +29,7 @@ ENV SQLX_OFFLINE=true
 #use release profile for SPEEEEEED
 RUN cargo build --release --bin armstrong
 
-#Runtime stage
+#stage 3: runtime environment
 FROM debian:bookworm-slim AS runtime
 
 WORKDIR /app
