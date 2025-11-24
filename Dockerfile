@@ -9,7 +9,7 @@ WORKDIR /app
 #Install required system dependencies for our linking configuration
 RUN apt update && apt install lld clang -y
 
-From chef as planner
+FROM chef as planner
 #Copy all files from working environment to Docker image
 COPY . .
 
