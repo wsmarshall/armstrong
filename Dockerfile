@@ -16,9 +16,19 @@ ENV SQLX_OFFLINE=true
 RUN cargo build --release
 
 #Runtime stage
-FROM rust:1.91.1 AS runtime
+FROM debian:bookworm-slim AS runtime
 
 WORKDIR /app
+
+#install OpenSSL - since it's dynamically linked by some of our dependencies
+# install ca-certificates - needed to verify TLS certificates when establishing HTTPS connections
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    #Clean Up Crap
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
+
 #Copy the compiled binary from the build environment to the runtime environment
 COPY --from=builder /app/target/release/armstrong armstrong
 #runtime needs configuration file
