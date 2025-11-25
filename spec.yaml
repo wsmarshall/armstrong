@@ -33,4 +33,4 @@ databases:
     num_nodes: 1
     size: db-s-dev-database 
     #Postgres version number
-    version: "12"
+    version: "14"
