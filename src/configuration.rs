@@ -65,6 +65,13 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
         .add_source(config::File::from(
             configuration_directory.join(environment_filename),
         ))
+        //add settings from environment variables with a prefix of APP and '__' as separator
+        //e.g., 'APP_APPLICATION_PORT=5001 would set 'Settings.application.port'
+        .add_source(
+            config::Environment::with_prefix("APP")
+                .prefix_separator("_")
+                .separator("__"),
+        )
         .build()?;
 
     //try to convert config vals read into our Settings type
