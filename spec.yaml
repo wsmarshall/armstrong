@@ -1,0 +1,7 @@
+name: armstrong
+#region slug sfo3 for San Francisco
+region: sfo3
+services:
+  - name: armstrong
+    #relative to repository root
+    dockerfile_path: Dockerfile
