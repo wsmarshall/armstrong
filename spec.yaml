@@ -5,3 +5,20 @@ services:
   - name: armstrong
     #relative to repository root
     dockerfile_path: Dockerfile
+    source_dir: .
+    github:
+      branch: main
+      #deploy a new version on every commit to main (CD)
+      deploy_on_push: true
+      repo: wsmarshall/armstrong
+    #active probe used by DigOce to check if app is "healthy"
+    health_check:
+      #path to our constructed health check endpoint
+      http_path: /health_check
+    #which port the app will listen to for incoming requests
+    #NB: needs to match port # in configuration/production.yaml
+    http_port: 8000
+    #for actual prod, >=2, but trying to keep costs manageable...
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    
