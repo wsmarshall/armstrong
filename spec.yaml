@@ -21,4 +21,7 @@ services:
     #for actual prod, >=2, but trying to keep costs manageable...
     instance_count: 1
     instance_size_slug: basic-xxs
-    
+    #all incoming requests should be routed to our app
+    routes:
+      - path: /
+      
